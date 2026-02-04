@@ -8,77 +8,55 @@ The framework is designed to help researchers build verifiers that can judge the
 You can test the entire pipeline immediately using the provided sample files. This ensures your environment is set up correctly before starting expensive GPU training.
 
 1. Installation
-Bash
-
 pip install -r requirements.txt
+
 2. Setup Environment
 Create a .env file in the root directory:
-
-Plaintext
-
 AZURE_OPENAI_API_KEY=your_key
 AZURE_OPENAI_ENDPOINT=https://your-endpoint.openai.azure.com/
 AZURE_VERSION=2024-02-15-preview
-3. Run Test Pipeline
-Bash
 
+3. Run Test Pipeline
 python main.py --train_data data/train.jsonl --test_data data/test.jsonl --max_train 2
+
 📂 Repository Structure & Module Descriptions
 The project follows a strict modular design to satisfy PEP 8 standards and ensure code maintainability.
 
 1. Root Directory
 main.py: The central orchestrator. It ties all modules together and implements the logic to skip steps if output files already exist.
-
 solver_outputs.jsonl: (Required) The input file containing the reasoning you want to verify.
-
 requirements.txt: Version-pinned dependencies for reproducibility.
-
 data/: Sub-directory containing train.jsonl and test.jsonl.
 
 2. Core Modules (src/)
 larger_model.py:
-
 Key Function: generate_response()
-
 Role: Interface for Azure OpenAI. Generates the "Teacher" reasoning used as labels for the verifier.
 
 smaller_model.py:
-
 Key Functions: train_verifier(), score_outputs()
-
 Role: Handles LoRA (Low-Rank Adaptation) fine-tuning of the smaller model and uses the trained adapter to score reasoning steps.
 
 evaluator.py:
-
 Key Functions: calculate_gating_metrics(), compute_reasoning_similarity()
-
 Role: Computes Accuracy, TP/FP/TN/FN metrics and performs semantic cosine similarity analysis between models.
 
 data_loader.py:
-
 Key Functions: load_jsonl(), save_jsonl(), file_exists()
-
 Role: Centralizes all I/O logic and powers the "Resume-Safe" feature.
 
 config.py & logger.py:
-
 Role: Replaces hardcoded strings with environment variables and replaces print() statements with professional, timestamped logs.
 
 🔄 The Research Pipeline
 Teacher Generation: The Larger Model solves problems to create a "Correct Reasoning" dataset.
-
 Verifier Fine-tuning: The Smaller Model (e.g., Qwen-3B) learns to predict high scores for Teacher-level reasoning.
-
 Solver Scoring: The pipeline loads existing solver reasoning and scores it using the new verifier.
-
 Performance Evaluation: The system measures how well verifier scores correlate with actual answer correctness.
-
 Semantic Check: Calculates the cosine similarity between the Solver's logic and the Teacher's gold-standard logic.
 
 🛠 Advanced Usage
 You can customize the run using CLI arguments:
-
-Bash
 
 python main.py \
     --train_data data/train.jsonl \
@@ -86,11 +64,9 @@ python main.py \
     --threshold 0.7 \
     --max_train 50 \
     --verifier_base Qwen/Qwen2.5-3B-Instruct
+
 ✅ Contribution Guidelines
 This is an InnerSource project. To maintain high code quality:
-
 Imports: Always place imports at the top of the file.
-
 Modularity: Do not add data-processing logic to the model files; use data_loader.py.
-
 Logging: Use logger.info() or logger.error()—never use print()
