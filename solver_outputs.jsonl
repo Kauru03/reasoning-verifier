@@ -1,0 +1,1 @@
+{"input": "Calculate 15% of 200.", "reasoning_model_llama": "15% of 200 is 0.15 * 200. 15 * 2 = 30.", "reasoning_pred_answer_llama": "30", "answer": "30"}
