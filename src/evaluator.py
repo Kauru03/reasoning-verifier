@@ -3,7 +3,6 @@ import torch
 from sklearn.metrics import confusion_matrix
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
-
 from src.logger import logger
 from src.larger_model import LargerModelClient
 

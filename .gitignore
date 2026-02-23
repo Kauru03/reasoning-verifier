@@ -1,5 +1,9 @@
 .env
 __pycache__/
 verifier_lora/
-*.jsonl
-*.csv
+
+# Ignore large data, but allow samples
+data/*.jsonl
+!data/train.jsonl
+!data/test.jsonl
+!solver_outputs.jsonl
